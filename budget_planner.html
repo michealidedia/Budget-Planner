@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple 50/30/20 Budget Worksheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @media print {
+            .no-print { display: none; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 my-8 shadow-lg rounded-lg">
+
+        <!-- Header -->
+        <div class="text-center border-b-2 border-gray-200 pb-6 mb-6">
+            <h1 class="text-4xl font-bold text-gray-800">My Monthly Budget Worksheet</h1>
+            <p class="text-lg text-gray-600 mt-2">"Let’s give every Naira a job."</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="mb-8 p-4 bg-green-50 rounded-lg text-green-800">
+            <h3 class="font-bold text-lg mb-2">How to Use This Budget Planner:</h3>
+            <ol class="list-decimal list-inside space-y-1">
+                <li><strong>Step 1:</strong> Enter your monthly income to instantly see your spending targets.</li>
+                <li><strong>Step 2:</strong> Fill in your expenses under each category (Needs, Wants, Savings).</li>
+                <li><strong>Step 3:</strong> See your total spent and balance left in the final summary.</li>
+                <li>Click <strong>"Reset All"</strong> to start again or <strong>"Print / Save as PDF"</strong> to save a copy.</li>
+                <li class="font-semibold">Works fully offline — once opened, no data needed!</li>
+            </ol>
+        </div>
+
+        <!-- Step 1: Income & Targets -->
+        <div class="bg-gray-50 p-6 rounded-lg mb-8">
+            <h2 class="text-2xl font-bold mb-4">Step 1: Enter Your Income</h2>
+            <div class="flex flex-col md:flex-row items-center gap-4">
+                <label for="income" class="font-semibold text-lg whitespace-nowrap">My Monthly Income (After Tax):</label>
+                <input type="number" id="income" placeholder="e.g., 150000" class="w-full md:w-1/2 p-3 border-2 border-gray-300 rounded-lg text-xl font-bold focus:border-green-500 focus:ring-green-500">
+            </div>
+            <div id="targets" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 text-center">
+                <div class="bg-red-100 p-4 rounded-lg">
+                    <p class="font-semibold text-red-800">NEEDS (50%)</p>
+                    <p id="needs-target" class="text-2xl font-bold text-red-900">₦0</p>
+                </div>
+                <div class="bg-blue-100 p-4 rounded-lg">
+                    <p class="font-semibold text-blue-800">WANTS (30%)</p>
+                    <p id="wants-target" class="text-2xl font-bold text-blue-900">₦0</p>
+                </div>
+                <div class="bg-green-100 p-4 rounded-lg">
+                    <p class="font-semibold text-green-800">SAVINGS (20%)</p>
+                    <p id="savings-target" class="text-2xl font-bold text-green-900">₦0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Track Your Spending -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Step 2: Track Your Spending</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Needs Column -->
+                <div id="needs-col">
+                    <h3 class="text-xl font-semibold text-red-800 mb-2">NEEDS</h3>
+                    <!-- Items will be generated here -->
+                    <div class="mt-2 p-2 bg-red-100 rounded-b-lg flex justify-between items-center font-bold text-red-900">
+                        <span>Total Needs:</span>
+                        <span id="needs-total">₦0</span>
+                    </div>
+                </div>
+                <!-- Wants Column -->
+                <div id="wants-col">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-2">WANTS</h3>
+                    <!-- Items will be generated here -->
+                     <div class="mt-2 p-2 bg-blue-100 rounded-b-lg flex justify-between items-center font-bold text-blue-900">
+                        <span>Total Wants:</span>
+                        <span id="wants-total">₦0</span>
+                    </div>
+                </div>
+                <!-- Savings Column -->
+                <div id="savings-col">
+                    <h3 class="text-xl font-semibold text-green-800 mb-2">SAVINGS / DEBT</h3>
+                    <!-- Items will be generated here -->
+                     <div class="mt-2 p-2 bg-green-100 rounded-b-lg flex justify-between items-center font-bold text-green-900">
+                        <span>Total Savings:</span>
+                        <span id="savings-total">₦0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: The Final Summary -->
+        <div class="bg-gray-800 text-white p-6 rounded-lg">
+            <h2 class="text-2xl font-bold text-center mb-4">Step 3: Your Final Summary</h2>
+            <div class="flex justify-around items-center text-center">
+                <div>
+                    <p class="text-gray-300">Total Spent</p>
+                    <p id="total-spent" class="text-3xl font-bold">₦0</p>
+                </div>
+                <div class="border-l border-r border-gray-600 px-8">
+                    <p class="text-gray-300">Income</p>
+                    <p id="summary-income" class="text-3xl font-bold">₦0</p>
+                </div>
+                <div>
+                    <p class="text-gray-300">Balance (Leftover)</p>
+                    <p id="balance" class="text-3xl font-bold text-green-400">₦0</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="text-center mt-8 no-print flex justify-center gap-4">
+            <button id="reset-btn" class="bg-gray-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-600 transition-colors">
+                Reset All
+            </button>
+            <button onclick="window.print()" class="bg-green-700 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-800 transition-colors">
+                Print / Save as PDF
+            </button>
+        </div>
+
+    </div>
+    
+    <!-- Footer with Credit -->
+    <footer class="text-center py-6 no-print">
+        <p class="text-sm text-gray-600">
+            Created by <strong>Michael Idedia</strong>. Share your feedback to 
+            <a href="mailto:idediamicheal@gmail.com" class="text-green-700 hover:underline">idediamicheal@gmail.com</a>
+        </p>
+    </footer>
+
+    <script>
+        const expenseData = {
+            needs: ["Rent / Mortgage", "Transport (Fuel/Bus)", "Foodstuff", "Electricity Bill", "Cooking Gas", "Data & Airtime", "School Fees", "Health/Medication", "Other"],
+            wants: ["Eating Out", "Subscriptions", "Shopping", "Entertainment", "Aso Ebi / Gifts", "Family Support", "Hobbies", "Grooming", "Other"],
+            savings: ["Emergency Fund", "Investments", "Debt Repayment", "'Japa' Fund", "Project Savings", "Pension", "Cooperative", "Other"]
+        };
+
+        function createExpenseItem(name, category) {
+            const div = document.createElement('div');
+            div.className = 'flex justify-between items-center p-2 border-b';
+            div.innerHTML = `
+                <label class="text-gray-700">${name}</label>
+                <input type="number" placeholder="0" class="w-28 p-1 border rounded text-right expense-input" data-category="${category}">
+            `;
+            return div;
+        }
+
+        Object.keys(expenseData).forEach(category => {
+            const column = document.getElementById(`${category}-col`);
+            expenseData[category].forEach(item => {
+                column.insertBefore(createExpenseItem(item, category), column.lastElementChild);
+            });
+        });
+
+        function formatNaira(amount) {
+            return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 }).format(amount);
+        }
+
+        function updateBudget() {
+            const income = parseFloat(document.getElementById('income').value) || 0;
+
+            // Update targets
+            document.getElementById('needs-target').textContent = formatNaira(income * 0.5);
+            document.getElementById('wants-target').textContent = formatNaira(income * 0.3);
+            document.getElementById('savings-target').textContent = formatNaira(income * 0.2);
+
+            let totalSpent = 0;
+            
+            // Update category totals
+            Object.keys(expenseData).forEach(category => {
+                let categoryTotal = 0;
+                document.querySelectorAll(`.expense-input[data-category="${category}"]`).forEach(input => {
+                    categoryTotal += parseFloat(input.value) || 0;
+                });
+                document.getElementById(`${category}-total`).textContent = formatNaira(categoryTotal);
+                totalSpent += categoryTotal;
+            });
+            
+            // Update summary
+            const balance = income - totalSpent;
+            document.getElementById('total-spent').textContent = formatNaira(totalSpent);
+            document.getElementById('summary-income').textContent = formatNaira(income);
+            const balanceEl = document.getElementById('balance');
+            balanceEl.textContent = formatNaira(balance);
+            
+            if (balance < 0) {
+                balanceEl.classList.remove('text-green-400');
+                balanceEl.classList.add('text-red-400');
+            } else {
+                balanceEl.classList.add('text-green-400');
+                balanceEl.classList.remove('text-red-400');
+            }
+        }
+
+        function resetBudget() {
+            document.getElementById('income').value = '';
+            document.querySelectorAll('.expense-input').forEach(input => {
+                input.value = '';
+            });
+            updateBudget();
+        }
+
+        document.getElementById('income').addEventListener('input', updateBudget);
+        document.querySelectorAll('.expense-input').forEach(input => {
+            input.addEventListener('input', updateBudget);
+        });
+        document.getElementById('reset-btn').addEventListener('click', resetBudget);
+
+        // Initial call to set everything up
+        updateBudget();
+    </script>
+
+</body>
+</html>
